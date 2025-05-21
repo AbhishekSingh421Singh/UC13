@@ -1,0 +1,79 @@
+name: Provision Infra
+
+
+on:
+ push:
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  provision:
+    name: Terraform Infra via EC2
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+ 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ROLE }}
+          aws-region: us-east-1
+ 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.11.4'
+          
+      - name: Terraform formtat 
+        run: terraform fmt
+        
+
+      - name: Terraform init 
+        run: terraform init
+        
+      - name: Terraform validate 
+        run: terraform validate 
+
+      - name: Terraform plan
+        run: terraform plan
+        
+      # - name: Install tflint
+      #   run: |
+      #        curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      # - name: Run tflint with custom config
+      #   run: |
+      #     echo "Using custom rules from .tflint.hcl"
+      #     tflint --config=./.tflint.hcl
+      #   continue-on-error: true
+      # - name: Install terraform-docs
+      #   run: |
+      #       curl -s https://raw.githubusercontent.com/terraform-docs/terraform-docs/master/scripts/install.sh
+ 
+      # # - name: Generate Terraform docs
+      # #   run: terraform-docs markdown . > README.md
+ 
+      # # - name: Commit docs
+      # #   if: github.ref == 'refs/heads/main'
+      # #   run: |
+      # #        git config user.name "GitHub Actions"
+      # #        git config user.email "actions@github.com"
+      # #        git add README.md
+      # #        git diff --cached --quiet || git commit -m "Update Terraform docs"
+      # #        git push
+             
+      # - name: Generate terraform docs
+      #   uses: terraform-docs/gh-actions@v1.0.0
+      #   with:
+      #      working-dir: ./modules/vpc
+      #      output-file: README.md
+      #      output-method: replace
+          
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        
+      #- name: Terraform destroy (Create EC2)
+       # if: always()
+       # run: terraform destroy -auto-approve
