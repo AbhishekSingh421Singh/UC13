@@ -1,4 +1,4 @@
-name: Provision Infra using terraform ci/cd
+name: Provision Infra using terraform
 
 
 on:
