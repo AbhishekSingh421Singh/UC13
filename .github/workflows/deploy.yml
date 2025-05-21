@@ -27,17 +27,26 @@ jobs:
           terraform_version: '1.11.4'
           
       - name: Terraform formtat 
-        run: terraform fmt
+        run: |
+          cd infrastructure
+          terraform fmt
         
 
       - name: Terraform init 
-        run: terraform init
+        run: |
+          cd infrastructure
+          terraform init
         
       - name: Terraform validate 
-        run: terraform validate 
+        run: |
+          cd infrastructure
+          terraform validate
+
 
       - name: Terraform plan
-        run: terraform plan
+        run: |
+          cd infrastructure
+          terraform plan
         
       # - name: Install tflint
       #   run: |
@@ -72,7 +81,9 @@ jobs:
       #      output-method: replace
           
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: |
+          cd infrastructure
+          terraform apply -auto-approve
         
       #- name: Terraform destroy (Create EC2)
        # if: always()
