@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.aws_region
-}
-
 # IAM Role for Lambda
 resource "aws_iam_role" "lambda_exec_role" {
   name = "lambda_exec_role"
